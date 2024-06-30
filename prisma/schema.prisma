@@ -2,7 +2,145 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+
+
+
+enum Role {
+  USER
+  ADMIN
+  MANAGER
+}
+
+
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+
+
+
+
+model User {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  password    String
+  firstName   String
+  lastName    String
+  phoneNumber String?
+  role        Role      @default(USER)
+  Bookings    Booking[]
+  Reviews     Review[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+
+
+
+model Flight {
+  id            String    @id @default(uuid())
+  airline       String
+  flightNumber  String
+  departureDate DateTime
+  arrivalDate   DateTime
+  departureCity String
+  arrivalCity   String
+  price         Float
+  seatsAvailable Int
+  bookings      Booking[]
+  Reviews       Review[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+
+
+
+
+model Hotel {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  address     String
+  city        String
+  country     String
+  price       Float
+  roomsAvailable Int
+  bookings    Booking[]
+  Reviews     Review[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+
+
+
+model Booking {
+  id           String         @id @default(uuid())
+  userId       String
+  flightId     String?        
+  hotelId      String?       
+  startDate    DateTime
+  endDate      DateTime
+  totalPrice   Float
+  status       BookingStatus  @default(PENDING)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  payments     Payment[]
+
+  // Relationships
+  user         User           @relation(fields: [userId], references: [id])
+  flight       Flight?        @relation(fields: [flightId], references: [id])
+  hotel        Hotel?         @relation(fields: [hotelId], references: [id])
+}
+
+
+
+
+
+
+model Review {
+  id          String    @id @default(uuid())
+  userId      String
+  flightId    String?   
+  hotelId     String?   
+  rating      Int
+  comment     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id])
+  flight      Flight?   @relation(fields: [flightId], references: [id])
+  hotel       Hotel?    @relation(fields: [hotelId], references: [id])
+}
+
+
+
+
+
+
+model Payment {
+  id          String   @id @default(uuid())
+  bookingId   String
+  amount      Float
+  method      String
+  status      String
+  transactionDate DateTime @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relationships
+  booking     Booking  @relation(fields: [bookingId], references: [id])
 }
