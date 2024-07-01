@@ -333,3 +333,66 @@ export const restPassword = async (
   }
 };
 
+
+
+
+
+
+
+/**
+ *service to change the logged in user password 
+ *@param {PASS} data - user token that got from the sent email
+ *@returns {Promise<string>} - acknowledge that password has been changed
+ *@throws {ApiError} -if any error occurs throw error to the controller
+**/
+
+//types
+interface PASS {
+  old: string;
+  new: string;
+};
+
+export const changePasswordService = async (userID : string , data: PASS): Promise<string> => {
+  try {
+    if (!data.old || !data.new) {
+      throw new ApiError("You must provide both the old and new password", 400);
+    }
+
+    const user = await prisma.user.findUnique({where : {id : userID}});
+
+    //if user does not exist
+    if (!user) {
+      throw new ApiError("User not found", 404);
+    }
+
+    //is user exists
+    const isMatch = await bcrypt.compare(data.old, user.password);
+    if (!isMatch) {
+      throw new ApiError("Invalid old password", 401);
+    }
+
+    //update the user password
+    await prisma.user.update({where : {id : user.id}, data : {
+      password : await bcrypt.hash(data.new, 12),
+    }})
+
+
+    return "password changed successfully";
+
+    //await passwordChangedNotify(user.email, user.name);
+
+  } catch (err: any) {
+    logger.error("Error during change password service:", err);
+
+    //throw the error to the controller
+    if (err instanceof ApiError) throw err;
+    throw new ApiError("Internal Server Error", 500);
+  }
+};
+
+
+
+
+
+
+
