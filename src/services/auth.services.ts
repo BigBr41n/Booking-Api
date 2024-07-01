@@ -16,8 +16,8 @@ const prisma = new PrismaClient();
 
 /**
  *service to register a new user
- *@param {SIGNUP} userData - user data needed to register
- *@returns {Promise<SIGNUP | undefined>} - The created user document.// TODO : ADD THE USER DOCUMENT TYPE
+ *@param {REGISTER_INPUT} userData - user data needed to register
+ *@returns {Promise<User | null>} - The created user document.// TODO : ADD THE USER DOCUMENT TYPE
  *@throws {ApiError} -if the user registration failed
  **/
 
@@ -31,7 +31,7 @@ type REGISTER_INPUT = Omit<
 
 export const signUpService = async (
   userData: REGISTER_INPUT
-): Promise<User | undefined> => {
+): Promise<User | null> => {
   try {
     //check for unique emails
     const user = await prisma.user.findFirst({
@@ -57,6 +57,7 @@ export const signUpService = async (
     //await sendEmailVerification(userData.email, userData.fistname, activationToken);
 
     return newUser;
+
   } catch (err: any) {
     logger.error("Error during sign up service:", err);
 
@@ -91,6 +92,9 @@ export const loginService = async (
       throw new ApiError("User not found!", 404);
     }
 
+    if (!user.verified) {
+      throw new ApiError("Email not verified!", 401);
+    }
 
     const isMatch = await bcrypt.compare(userData.password, user.password);
     if (!isMatch) {
@@ -98,7 +102,7 @@ export const loginService = async (
     }
 
 
-     const OTP = generateOTP(8);
+    const OTP = generateOTP(8);
 
     //await sentOTP(user.email, user.firstname , OTP), 
 
