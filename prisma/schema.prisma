@@ -48,6 +48,7 @@ model User {
   role        Role      @default(USER)
   Bookings    Booking[]
   Reviews     Review[]
+  banned      Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
