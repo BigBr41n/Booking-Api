@@ -120,6 +120,7 @@ export const loginService = async (
 
 
 
+
 /**
  * @param {string} token - The token sent to email
  * @returns {Promise<string | null>} - return a string of email successfully activated
@@ -243,3 +244,43 @@ export const verifyOTP = async (OTP: string): Promise<Tokens> => {
 
 
 
+
+
+
+
+
+
+
+export const forgotPasswordService = async (
+  email: string
+): Promise<string> => {
+  try {
+    const user = await prisma.user.findUnique({ where : {email: email}});
+
+    //if no user is found
+    if (!user) throw new ApiError("Invalid Email!", 200);
+
+    const changePassToken = crypto.randomBytes(32).toString("hex");
+    const changePassTokenExpires = Date.now() + 1000 * 60 * 60;
+
+
+
+    await prisma.user.update({where : {
+      email: email
+    },
+    data : {
+      resetToken : changePassToken,
+      restExpires : new Date(changePassTokenExpires),
+   }})
+
+
+    //await sendForgotPassToken(email, user.name, changePassToken);
+
+    return "email sent successfully";
+    
+  } catch (err: any) {
+    logger.error("Error during forgot password service:", err);
+    if (err instanceof ApiError) throw err;
+    throw new ApiError("Internal Server Error", 500);
+  }
+};
