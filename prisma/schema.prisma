@@ -45,6 +45,7 @@ model User {
   verificationExpires DateTime?
   verified    Boolean   @default(false)
   phoneNumber String?
+  avatar      String?
   role        Role      @default(USER)
   Bookings    Booking[]
   Reviews     Review[]

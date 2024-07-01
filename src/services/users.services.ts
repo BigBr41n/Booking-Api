@@ -1,5 +1,7 @@
 import { ApiError } from "../utils/ApiError";
 import bcryptjs from "bcryptjs";
+import fs from 'fs'; 
+import path from 'path'; 
 
 //PRISMA CLIENT
 import { PrismaClient, User } from "@prisma/client";
@@ -54,6 +56,7 @@ export const getAllUsersService = async (
         updatedAt: true,
         verified: true,
         banned: true,
+        avatar: true,
         // exclude sensitive fields
         password: false,
         OTP: false,
@@ -172,7 +175,153 @@ export const createNewManager = async (
 
 
 
-export const getUserByIdService = async (userId: string) => {};
-export const updateUserInfoService = async (userId: string) => {};
-export const updateUserEmailService = async () => {};
-export const uploadOrChangeAvatarService = async () => {};
+
+
+
+
+
+/**
+ * Service to fetch a user by ID
+ * @param {string} userId - The ID of the user to fetch
+ * @returns {Promise<Partial<User> | null>} - The user object if found, null if not found
+ * @throws {ApiError} - If there's an error during database operation
+ */
+export const getUserByIdService = async (userId: string): Promise<Partial<User> | null> => {
+    try {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        throw new ApiError("User not found", 404);
+      }
+  
+      const publicUser: Partial<User> = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+        avatar: user.avatar,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        verified: user.verified,
+        banned: user.banned,
+      };
+  
+      return publicUser;
+    } catch (err: any) {
+      logger.error("Error during get user by ID service:", err);
+      if (err instanceof ApiError) {
+        throw err;
+      }
+      throw new ApiError("Failed to fetch user", 500);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Service to update user information
+ * @param {string} userId - The ID of the user to update
+ * @param {Partial<User>} userInfo - The new user information
+ * @returns {Promise<User>} - The updated user document
+ * @throws {ApiError} - If the user update fails
+ */
+export const updateUserInfoService = async (userId: string, userInfo: Partial<User>): Promise<User> => {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: userInfo,
+    });
+
+    return updatedUser;
+
+  } catch (err: any) {
+    logger.error("Error during updating user info:", err);
+    throw new ApiError("Failed to update user info", 500);
+  }
+};
+
+
+
+
+
+
+
+
+
+/**
+ * Service to update user email
+ * @param {string} userId - The ID of the user to update
+ * @param {string} newEmail - The new email address
+ * @returns {Promise<User>} - The updated user document
+ * @throws {ApiError} - If the user update fails
+ */
+export const updateUserEmailService = async (userId: string, newEmail: string): Promise<User> => {
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { email: newEmail },
+      });
+  
+
+      //TODO : SEND EMAIL TO VERIFY THE OPERATION
+
+      return updatedUser;
+  
+    } catch (err: any) {
+      logger.error("Error during updating user email:", err);
+      throw new ApiError("Failed to update user email", 500);
+    }
+};
+
+
+
+
+
+
+
+
+
+  
+/**
+ * Service to upload or change user avatar
+ * @param {string} userId - The ID of the user to update
+ * @param {Express.Multer.File} file - The uploaded file
+ * @returns {Promise<User>} - The updated user document
+ * @throws {ApiError} - If the avatar update fails
+ */
+export const uploadOrChangeAvatarService = async (userId: string, file: Express.Multer.File): Promise<User> => {
+    try {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) throw new ApiError("User not found", 404);
+  
+      // If the user already has an avatar, delete the old file
+      if (user.avatar) {
+        const oldAvatarPath = path.join(__dirname, '../../uploads/avatars', user.avatar);
+        if (fs.existsSync(oldAvatarPath)) {
+          fs.unlinkSync(oldAvatarPath);
+        }
+      }
+  
+      // Update the user's avatar
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { avatar: `/avatar/${file.filename}`},
+      });
+  
+      return updatedUser;
+  
+    } catch (err: any) {
+      logger.error("Error during uploading or changing avatar:", err);
+      throw new ApiError("Failed to upload or change avatar", 500);
+    }
+  };
+  
