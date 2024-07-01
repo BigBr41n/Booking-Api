@@ -59,20 +59,22 @@ model User {
 
 
 model Flight {
-  id            String    @id @default(uuid())
-  airline       String
-  flightNumber  String
-  departureDate DateTime
-  arrivalDate   DateTime
-  departureCity String
-  arrivalCity   String
-  price         Float
-  seatsAvailable Int
-  bookings      Booking[]
-  Reviews       Review[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id              String    @id @default(uuid())
+  airline         String
+  flightNumber    String
+  departureDate   DateTime
+  arrivalDate     DateTime
+  departureCity   String
+  arrivalCity     String
+  price           Float
+  seatsAvailable  Int
+  bookings        Booking[]
+  reviews         Review[]
+  status          String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
+
 
 
 
@@ -105,6 +107,7 @@ model Booking {
   startDate    DateTime
   endDate      DateTime
   totalPrice   Float
+  seatType     String?
   status       BookingStatus  @default(PENDING)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
