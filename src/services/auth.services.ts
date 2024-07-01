@@ -288,3 +288,48 @@ export const forgotPasswordService = async (
     throw new ApiError("Internal Server Error", 500);
   }
 };
+
+
+
+
+
+/**
+ *service to rest user password after confirming the token
+ *@param {string} token - user token that got from the sent email
+ *@param {string} newPassword - the new password of the user account
+ *@returns {Promise<boolean >} - if the reset password succeeded sent true 
+ *@throws {ApiError} -if any error occurred
+**/
+export const restPassword = async (
+  token: string,
+  newPassword: string
+): Promise<string> => {
+  try {
+    const user = await prisma.user.findFirst({where :
+       {resetToken : token,
+        restExpires: {gt: new Date(Date.now())},
+    }});
+
+    if (!user) {
+      throw new ApiError("Invalid Token or expired ", 401);
+    }
+
+
+    //update the user password
+    await prisma.user.update({where : {id : user.id}, data : {
+      password : await bcrypt.hash(newPassword, 12),
+      resetToken : "",
+      restExpires : "",
+    }})
+
+
+    return "password changed successfully";
+  } catch (err: any) {
+    logger.error("Error during forgot password conf service:", err);
+
+    //throw the error to the controller
+    if (err instanceof ApiError) throw err;
+    throw new ApiError("INternal Server Error", 500);
+  }
+};
+
