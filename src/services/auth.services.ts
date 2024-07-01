@@ -195,3 +195,51 @@ export const verifyEmailService = async (token : string) : Promise<string | null
 
 
 
+
+
+
+
+
+
+
+
+/**
+ * @param {string} OTP - OTP from the email
+ * @returns {Promise<Tokens>} - return the access token and the refresh token
+ * @throws {ApiError} - if the user OTP verification failed
+ */
+interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export const verifyOTP = async (OTP: string): Promise<Tokens> => {
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        OTP: OTP,
+        OTPEx: { gt: new Date() },
+      },
+    });
+
+    if (!user) {
+      throw new ApiError("OTP invalid; please Login Again", 401);
+    }
+
+    const accessToken = signJwt(user.id);
+    const refreshToken = signRefreshToken(user.id);
+
+    if (!accessToken || !refreshToken) {
+      throw new ApiError("Error creating tokens", 500);
+    }
+
+    return { accessToken, refreshToken };
+  } catch (err: any) {
+    logger.error("Error during verifyOTP:", err);
+    if (err instanceof ApiError) throw err;
+    throw new ApiError("Internal Server Error", 500);
+  }
+};
+
+
+

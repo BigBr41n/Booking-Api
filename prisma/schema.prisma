@@ -35,7 +35,8 @@ model User {
   password    String
   firstName   String
   lastName    String
-  OTP         String?
+  OTP         String?   @unique
+  OTPEx       DateTime?
   resetToken  String?
   restExpires DateTime?
   chToken     String?
