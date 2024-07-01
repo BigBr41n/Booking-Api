@@ -4,6 +4,10 @@ import logger from "../utils/logger";
 import { generateOTP } from "../utils/generateOTP";
 import crypto from 'crypto';
 
+
+//IMPORT SEND EMAILS FUNCTIONS : 
+import { sendEmailVerification , sendForgotPassToken , sendOTP, passwordChangedNotify } from "../utils/mailer";
+
 //IMPORT THE PRISMA CLIENT WITH THE MODEL
 import { PrismaClient, User } from "@prisma/client";
 import { signJwt, signRefreshToken } from "../utils/jwt.utils";
@@ -54,7 +58,8 @@ export const signUpService = async (
       },
     });
 
-    //await sendEmailVerification(userData.email, userData.fistname, activationToken);
+    await sendEmailVerification(userData.email, userData.firstName, activationToken);
+
 
     return newUser;
 
@@ -104,7 +109,7 @@ export const loginService = async (
 
     const OTP = generateOTP(8);
 
-    //await sentOTP(user.email, user.firstname , OTP), 
+    await sendOTP(user.email, user.firstName , OTP);
 
     return "please check the OTP sent to your email"
 
@@ -167,7 +172,7 @@ export const verifyEmailService = async (token : string) : Promise<string | null
       });
 
 
-      //sendEmailVerification(checkToken.email , checkToken.firstname , newToken )
+      sendEmailVerification(checkToken.email , checkToken.firstName , newToken )
 
 
       throw new ApiError("Token expired or invalid we sent you a new one", 401);
@@ -278,7 +283,7 @@ export const forgotPasswordService = async (
    }})
 
 
-    //await sendForgotPassToken(email, user.name, changePassToken);
+    await sendForgotPassToken(email, user.firstName, changePassToken);
 
     return "email sent successfully";
 
@@ -376,10 +381,11 @@ export const changePasswordService = async (userID : string , data: PASS): Promi
       password : await bcrypt.hash(data.new, 12),
     }})
 
+    await passwordChangedNotify(user.email, user.firstName);
 
     return "password changed successfully";
 
-    //await passwordChangedNotify(user.email, user.name);
+    
 
   } catch (err: any) {
     logger.error("Error during change password service:", err);
