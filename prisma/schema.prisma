@@ -35,6 +35,14 @@ model User {
   password    String
   firstName   String
   lastName    String
+  OTP         String?
+  resetToken  String?
+  restExpires DateTime?
+  chToken     String?
+  chExpires   String?
+  verificationToken String?
+  verificationExpires DateTime?
+  verified    Boolean   @default(false)
   phoneNumber String?
   role        Role      @default(USER)
   Bookings    Booking[]

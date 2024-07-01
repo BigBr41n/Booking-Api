@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { ApiError } from "../utils/ApiError";
 import logger from "../utils/logger";
+import { generateOTP } from "../utils/generateOTP";
+import crypto from 'crypto';
 
 //IMPORT THE PRISMA CLIENT WITH THE MODEL
 import { PrismaClient, User } from "@prisma/client";
@@ -23,9 +25,8 @@ const prisma = new PrismaClient();
 
 type REGISTER_INPUT = Omit<
   User,
-  "id" | "Bookings" | "Reviews" | "createdAt" | "updatedAt"
+  "id" | "Bookings" | "Reviews" | "createdAt" | "updatedAt" 
 >;
-
 
 
 export const signUpService = async (
@@ -38,8 +39,8 @@ export const signUpService = async (
     });
     if (user) throw new ApiError("Email already  Exists", 401);
 
-    /* const activationToken = crypto.randomBytes(32).toString("hex");
-    const activeExpires = Date.now() + 1000 * 60 * 60; */
+    const activationToken = crypto.randomBytes(32).toString("hex");
+    const activeExpires = Date.now() + 1000 * 60 * 60;
 
     const newUser = await prisma.user.create({
       data: {
@@ -47,10 +48,13 @@ export const signUpService = async (
         password: await bcrypt.hash(userData.password, 12),
         firstName: userData.firstName,
         lastName: userData.lastName,
+        phoneNumber : userData.phoneNumber,
+        verificationToken : activationToken ,
+        verificationExpires : new Date(activeExpires) ,
       },
     });
 
-    //await sendActivationEmail(userData.email, userData.fistname, activationToken);
+    //await sendEmailVerification(userData.email, userData.fistname, activationToken);
 
     return newUser;
   } catch (err: any) {
@@ -76,9 +80,10 @@ export const signUpService = async (
  *@returns {Promise<LOGIN | undefined>} - the logged in user with the access token & refresh token
  *@throws {ApiError} -if the user login operation failed
  **/
+
 export const loginService = async (
   userData: {email : string , password : string}
-): Promise< {accessToken : string , refreshToken : string} | undefined> => {
+): Promise< string | null> => {
   try {
 
     const user = await prisma.user.findUnique({where : { email: userData.email }});
@@ -93,24 +98,11 @@ export const loginService = async (
     }
 
 
-/*     if (!user.verified) {
-      throw new ApiError(
-        "please verify your account , we sent to you an email !",
-        401
-      );
-    } */
-   
+     const OTP = generateOTP(8);
 
-    const accessToken = signJwt(user.id.toString());
-    const refreshToken = signRefreshToken(user.id.toString());
+    //await sentOTP(user.email, user.firstname , OTP), 
 
-    if(!accessToken || !refreshToken) {
-        throw new ApiError("Error While login", 500);
-    }
-    return {
-      accessToken,
-      refreshToken,
-    };
+    return "please check the OTP sent to your email"
 
   } catch (err: any) {
     logger.error("Error during login service:", err);
