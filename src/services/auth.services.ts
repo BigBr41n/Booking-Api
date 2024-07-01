@@ -249,7 +249,11 @@ export const verifyOTP = async (OTP: string): Promise<Tokens> => {
 
 
 
-
+/**
+ * @param {string} email - email of the user who forgot his pass
+ * @returns {Promise<String>} - return string that confirms the email sent successfully 
+ * @throws {ApiError} - if any error internal or by the user
+ */
 
 export const forgotPasswordService = async (
   email: string
@@ -277,7 +281,7 @@ export const forgotPasswordService = async (
     //await sendForgotPassToken(email, user.name, changePassToken);
 
     return "email sent successfully";
-    
+
   } catch (err: any) {
     logger.error("Error during forgot password service:", err);
     if (err instanceof ApiError) throw err;
