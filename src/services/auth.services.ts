@@ -27,7 +27,7 @@ const prisma = new PrismaClient();
 
 
 
-type REGISTER_INPUT = Omit<
+export type REGISTER_INPUT = Omit<
   User,
   "id" | "Bookings" | "Reviews" | "createdAt" | "updatedAt" 
 >;
@@ -352,7 +352,7 @@ export const restPassword = async (
 **/
 
 //types
-interface PASS {
+export interface PASS {
   old: string;
   new: string;
 };
