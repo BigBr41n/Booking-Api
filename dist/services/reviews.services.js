@@ -17,7 +17,7 @@ const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("../utils/logger"));
 const ApiError_1 = require("../utils/ApiError");
 const prisma = new client_1.PrismaClient();
-///////////////////////************** ONLY ADMIN AND MANAGERS ***************/////////////////////
+///////////////////////************** ONLY ADMIN , MANAGERS AND OWNER ***************/////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const deleteReviewService = (reviewId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
