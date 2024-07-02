@@ -291,37 +291,63 @@ export const updateUserEmailService = async (userId: string, newEmail: string): 
 
 
   
+interface GraphQLFile {
+  filename: string;
+  mimetype: string;
+  encoding: string;
+  createReadStream: () => NodeJS.ReadableStream;
+}
+
 /**
  * Service to upload or change user avatar
  * @param {string} userId - The ID of the user to update
- * @param {Express.Multer.File} file - The uploaded file
+ * @param {GraphQLFile} file - The uploaded file
  * @returns {Promise<User>} - The updated user document
  * @throws {ApiError} - If the avatar update fails
  */
-export const uploadOrChangeAvatarService = async (userId: string, file: Express.Multer.File): Promise<User> => {
-    try {
-      const user = await prisma.user.findUnique({ where: { id: userId } });
-      if (!user) throw new ApiError("User not found", 404);
-  
-      // If the user already has an avatar, delete the old file
-      if (user.avatar) {
-        const oldAvatarPath = path.join(__dirname, '../../uploads/avatars', user.avatar);
-        if (fs.existsSync(oldAvatarPath)) {
-          fs.unlinkSync(oldAvatarPath);
-        }
+export const uploadOrChangeAvatarService = async (
+  userId: string,
+  file: GraphQLFile
+): Promise<User> => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new ApiError('User not found', 404);
+
+    
+    if (user.avatar) {
+      const oldAvatarPath = path.join(__dirname, '../../../uploads/avatars', user.avatar);
+      if (fs.existsSync(oldAvatarPath)) {
+        fs.unlinkSync(oldAvatarPath);
       }
-  
-      // Update the user's avatar
-      const updatedUser = await prisma.user.update({
-        where: { id: userId },
-        data: { avatar: `/avatar/${file.filename}`},
-      });
-  
-      return updatedUser;
-  
-    } catch (err: any) {
-      logger.error("Error during uploading or changing avatar:", err);
-      throw new ApiError("Failed to upload or change avatar", 500);
     }
-  };
+
+    const { createReadStream, filename } = file;
+    const stream = createReadStream();
+    const filePath = path.join(__dirname, '../../../uploads/avatars', filename);
+
+    // Ensure the uploads directory exists
+    const uploadsDir = path.join(__dirname, '../../../uploads/avatars');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+
+    await new Promise((resolve, reject) => {
+      const writeStream = fs.createWriteStream(filePath);
+      stream.pipe(writeStream);
+      writeStream.on('finish', resolve);
+      writeStream.on('error', reject);
+    });
+
+    // Update the user's avatar
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { avatar: `/avatar/${filename}` },
+    });
+
+    return updatedUser;
+  } catch (err: any) {
+    logger.error('Error during uploading or changing avatar:', err);
+    throw new ApiError('Failed to upload or change avatar', 500);
+  }
+};
   
