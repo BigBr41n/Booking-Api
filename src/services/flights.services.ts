@@ -5,7 +5,7 @@ import { ApiError } from '../utils/ApiError';
 
 const prisma = new PrismaClient();
 
-interface FlightData {
+export interface FlightData {
   airline: string;
   flightNumber: string;
   departureDate: Date;
