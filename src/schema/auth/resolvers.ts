@@ -14,6 +14,7 @@ import {
   restPassword,
   changePasswordService,
 } from "../../services/auth.services";
+import logger from '../../utils/logger';
 
 
 
@@ -25,7 +26,7 @@ const resolvers = {
       try {
         return await signUpService(userData);
       } catch (error: any) {
-        console.error("Error in signUp:", error);
+        logger.error("Error in signUp:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"
@@ -40,7 +41,7 @@ const resolvers = {
       try {
         return await loginService(userData);
       } catch (error: any) {
-        console.error("Error in login:", error);
+        logger.error("Error in login:", error);
         throw new AuthenticationError(error.message);
       }
     },
@@ -49,7 +50,7 @@ const resolvers = {
       try {
         return await verifyEmailService(token);
       } catch (error: any) {
-        console.error("Error in verifyEmail:", error);
+        logger.error("Error in verifyEmail:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"
@@ -61,7 +62,7 @@ const resolvers = {
       try {
         return await verifyOTP(OTP);
       } catch (error: any) {
-        console.error("Error in verifyOTP:", error);
+        logger.error("Error in verifyOTP:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"
@@ -73,7 +74,7 @@ const resolvers = {
       try {
         return await forgotPasswordService(email);
       } catch (error: any) {
-        console.error("Error in forgotPassword:", error);
+        logger.error("Error in forgotPassword:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"
@@ -88,7 +89,7 @@ const resolvers = {
       try {
         return await restPassword(token, newPassword);
       } catch (error: any) {
-        console.error("Error in resetPassword:", error);
+        logger.error("Error in resetPassword:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"
@@ -103,7 +104,7 @@ const resolvers = {
       try {
         return await changePasswordService(userID, data);
       } catch (error: any) {
-        console.error("Error in changePassword:", error);
+        logger.error("Error in changePassword:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"

@@ -1,5 +1,6 @@
 import { GraphQLUpload } from 'graphql-upload';
 import { User } from '@prisma/client';
+import logger from '../../utils/logger'
 import {
   getAllUsersService,
   banUserService,
@@ -17,15 +18,15 @@ export const resolvers = {
   Upload: GraphQLUpload,
 
   Query: {
-    getAllUsers: (
+    getAllUsers: async (
       _: any,
       { role }: { role: 'USER' | 'MANAGER' }
-    ): Promise<Partial<User>[]> => getAllUsersService(role),
+    ): Promise<Partial<User>[]> => await getAllUsersService(role),
 
-    getUserById: (
+    getUserById: async (
       _: any,
       { userId }: { userId: string }
-    ): Promise<Partial<User> | null> => getUserByIdService(userId),
+    ): Promise<Partial<User> | null> => await getUserByIdService(userId),
   },
 
   Mutation: {
@@ -37,7 +38,7 @@ export const resolvers = {
         await banUserService(userId);
         return true;
       } catch (error: any) {
-        console.error("Error in banUser:", error);
+        logger.error("Error in banUser:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"
@@ -45,16 +46,16 @@ export const resolvers = {
       }
     },
 
-    createNewManager: (
+    createNewManager: async (
       _: any,
       { input }: { input: any }
     ): Promise<User> => {
       try {
 
-        return createNewManager(input); 
+        return await createNewManager(input); 
 
       } catch (error : any) {
-        console.error("Error in createManger:", error);
+        logger.error("Error in createManger:", error);
         throw new ApolloError(
           error.message,
           error.statusCode || "INTERNAL_SERVER_ERROR"
@@ -62,22 +63,22 @@ export const resolvers = {
       }
     },
 
-    updateUserInfo: (
+    updateUserInfo: async (
       _: any,
       { userId, input }: { userId: string; input: Partial<User> }
-    ): Promise<User> => updateUserInfoService(userId, input),
+    ): Promise<User> => await updateUserInfoService(userId, input),
 
-    updateUserEmail: (
+    updateUserEmail: async (
       _: any,
       { userId, newEmail }: { userId: string; newEmail: string }
-    ): Promise<User> => updateUserEmailService(userId, newEmail),
+    ): Promise<User> => await updateUserEmailService(userId, newEmail),
 
     uploadOrChangeAvatar: async (
       _: any,
       { userId, file }: { userId: string; file: Promise<GraphQLUpload> }
     ): Promise<User> => {
       const upload = await file;
-      return uploadOrChangeAvatarService(userId, upload);
+      return await uploadOrChangeAvatarService(userId, upload);
     },
   },
 };
