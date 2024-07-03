@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-export const typeDefs = gql`
+const typeDefs = gql`
   enum BookingStatus {
     PENDING
     CONFIRMED
@@ -43,3 +43,6 @@ export const typeDefs = gql`
     updateBookingStatus(bookingId: ID!, status: BookingStatus!): Booking!
   }
 `;
+
+
+export default typeDefs ;

@@ -14,7 +14,7 @@ import { ApolloError } from 'apollo-server-express';
 
 
 
-export const resolvers = {
+const resolvers = {
   Upload: GraphQLUpload,
 
   Query: {
@@ -89,3 +89,7 @@ interface GraphQLUpload {
   encoding: string;
   createReadStream: () => NodeJS.ReadableStream;
 }
+
+
+
+export default resolvers;

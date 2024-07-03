@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-export const typeDefs = gql`
+const typeDefs = gql`
   scalar Date
 
   type Flight {
@@ -46,3 +46,6 @@ export const typeDefs = gql`
     cancelFlight(flightId: ID!): Flight!
   }
 `;
+
+
+export default typeDefs;

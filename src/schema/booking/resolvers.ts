@@ -12,7 +12,7 @@ import logger from '../../utils/logger'
 import { BookingStatus } from '@prisma/client';
 
 
-export const resolvers = {
+const resolvers = {
   Query: {
     getBookingById: async (_: any, { bookingId }: { bookingId: string }) => {
       try {
@@ -96,3 +96,6 @@ export const resolvers = {
     },
   },
 };
+
+
+export default resolvers ;

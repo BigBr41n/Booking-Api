@@ -19,7 +19,7 @@ import logger from '../../utils/logger';
 
 
 
-export const resolvers = {
+const resolvers = {
 
   Query: {
     getFlightsByDate: async (_: any, { date }: { date: Date }): Promise<Flight[]> => {
@@ -169,3 +169,6 @@ export const resolvers = {
     },
   },
 };
+
+
+export default resolvers ;

@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-export const typeDefs = gql`
+const typeDefs = gql`
   scalar Upload
   scalar DateTime
 
@@ -51,3 +51,6 @@ export const typeDefs = gql`
     phoneNumber: String
   }
 `;
+
+
+export default typeDefs

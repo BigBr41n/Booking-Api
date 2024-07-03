@@ -6,7 +6,7 @@ import {
   deleteReviewService
 } from '../../services/reviews.services';
 
-export const resolvers = {
+const resolvers = {
   Query: {
     getReviewsByEntity: async (_: any, { entityId, entityType }: { entityId: string, entityType: "flight" | "hotel" }) => {
       try {
@@ -42,3 +42,6 @@ export const resolvers = {
     },
   },
 };
+
+
+export default resolvers;
