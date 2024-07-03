@@ -1,19 +1,17 @@
-import express from 'express'
-import helmet from 'helmet'
-import cors from 'cors'
+import express, { Application } from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
+import { schema } from './schema/index';
 
+// Express instance
+const app = express() as any;
 
-//express instance
-const app = express();
-
-//middlewares
-app.use(helmet); 
+// Middlewares
+app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
+export const apolloServer = new ApolloServer({ schema });
 
-
-//export const apolloServer = new ApolloServer({ schema });  NO SCHEMA YET
-
-export default app ;
+export default app;

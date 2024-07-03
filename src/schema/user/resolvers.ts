@@ -1,4 +1,4 @@
-import { GraphQLUpload } from 'graphql-upload';
+//import { GraphQLUpload } from 'graphql-upload';
 import { User } from '@prisma/client';
 import logger from '../../utils/logger'
 import {
@@ -15,7 +15,7 @@ import { ApolloError } from 'apollo-server-express';
 
 
 const resolvers = {
-  Upload: GraphQLUpload,
+  //Upload: GraphQLUpload,
 
   Query: {
     getAllUsers: async (

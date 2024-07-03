@@ -1,4 +1,4 @@
-import { makeExecutableSchema } from  'graphql-tools';
+import { makeExecutableSchema } from  '@graphql-tools/schema';
 import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
 
 import userTypeDefs from './user/typeDefs';
