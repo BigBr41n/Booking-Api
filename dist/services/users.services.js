@@ -197,7 +197,7 @@ exports.updateUserEmailService = updateUserEmailService;
 /**
  * Service to upload or change user avatar
  * @param {string} userId - The ID of the user to update
- * @param {Express.Multer.File} file - The uploaded file
+ * @param {GraphQLFile} file - The uploaded file
  * @returns {Promise<User>} - The updated user document
  * @throws {ApiError} - If the avatar update fails
  */
@@ -205,24 +205,37 @@ const uploadOrChangeAvatarService = (userId, file) => __awaiter(void 0, void 0, 
     try {
         const user = yield prisma.user.findUnique({ where: { id: userId } });
         if (!user)
-            throw new ApiError_1.ApiError("User not found", 404);
-        // If the user already has an avatar, delete the old file
+            throw new ApiError_1.ApiError('User not found', 404);
         if (user.avatar) {
-            const oldAvatarPath = path_1.default.join(__dirname, '../../uploads/avatars', user.avatar);
+            const oldAvatarPath = path_1.default.join(__dirname, '../../../uploads/avatars', user.avatar);
             if (fs_1.default.existsSync(oldAvatarPath)) {
                 fs_1.default.unlinkSync(oldAvatarPath);
             }
         }
+        const { createReadStream, filename } = file;
+        const stream = createReadStream();
+        const filePath = path_1.default.join(__dirname, '../../../uploads/avatars', filename);
+        // Ensure the uploads directory exists
+        const uploadsDir = path_1.default.join(__dirname, '../../../uploads/avatars');
+        if (!fs_1.default.existsSync(uploadsDir)) {
+            fs_1.default.mkdirSync(uploadsDir, { recursive: true });
+        }
+        yield new Promise((resolve, reject) => {
+            const writeStream = fs_1.default.createWriteStream(filePath);
+            stream.pipe(writeStream);
+            writeStream.on('finish', resolve);
+            writeStream.on('error', reject);
+        });
         // Update the user's avatar
         const updatedUser = yield prisma.user.update({
             where: { id: userId },
-            data: { avatar: `/avatar/${file.filename}` },
+            data: { avatar: `/avatar/${filename}` },
         });
         return updatedUser;
     }
     catch (err) {
-        logger_1.default.error("Error during uploading or changing avatar:", err);
-        throw new ApiError_1.ApiError("Failed to upload or change avatar", 500);
+        logger_1.default.error('Error during uploading or changing avatar:', err);
+        throw new ApiError_1.ApiError('Failed to upload or change avatar', 500);
     }
 });
 exports.uploadOrChangeAvatarService = uploadOrChangeAvatarService;
