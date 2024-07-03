@@ -12,11 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+//import { GraphQLUpload } from 'graphql-upload';
+const graphql_upload_minimal_1 = require("graphql-upload-minimal");
 const logger_1 = __importDefault(require("../../utils/logger"));
 const users_services_1 = require("../../services/users.services");
 const apollo_server_express_1 = require("apollo-server-express");
 const resolvers = {
-    //Upload: GraphQLUpload,
+    Upload: graphql_upload_minimal_1.GraphQLUpload,
     Query: {
         getAllUsers: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { role }) { return yield (0, users_services_1.getAllUsersService)(role); }),
         getUserById: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { userId }) { return yield (0, users_services_1.getUserByIdService)(userId); }),

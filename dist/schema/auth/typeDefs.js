@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { gql } = require('apollo-server-express');
-const typeDefs = gql `
+const apollo_server_express_1 = require("apollo-server-express");
+const typeDefs = (0, apollo_server_express_1.gql) `
   enum Role {
     USER
     ADMIN
