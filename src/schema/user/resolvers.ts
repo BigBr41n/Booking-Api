@@ -21,13 +21,14 @@ const resolvers = {
   Query: {
     getAllUsers: async (
       _: any,
-      { role }: { role: 'USER' | 'MANAGER' }
+      { role }: { role: 'USER' | 'MANAGER' | 'ADMIN' }
     ): Promise<Partial<User>[]> => await getAllUsersService(role),
 
     getUserById: async (
       _: any,
-      { userId }: { userId: string }
-    ): Promise<Partial<User> | null> => await getUserByIdService(userId),
+      args : any , 
+      context: { user: { id: string; role: string } }
+    ): Promise<Partial<User> | null> => await getUserByIdService(context.user.id),
   },
 
   Mutation: {
@@ -66,8 +67,9 @@ const resolvers = {
 
     updateUserInfo: async (
       _: any,
-      { userId, input }: { userId: string; input: Partial<User> }
-    ): Promise<User> => await updateUserInfoService(userId, input),
+      { input }: {input: Partial<User> }, 
+      context: { user: { id: string; role: string } }
+    ): Promise<User> => await updateUserInfoService(context.user.id, input),
 
     updateUserEmail: async (
       _: any,
@@ -76,10 +78,11 @@ const resolvers = {
 
     uploadOrChangeAvatar: async (
       _: any,
-      { userId, file }: { userId: string; file: Promise<GraphQLUpload> }
+      { file }: { file: Promise<GraphQLUpload> }, 
+      context: { user: { id: string; role: string } }
     ): Promise<User> => {
       const upload = await file;
-      return await uploadOrChangeAvatarService(userId, upload);
+      return await uploadOrChangeAvatarService(context.user.id , upload);
     },
   },
 };

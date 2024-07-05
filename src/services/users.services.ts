@@ -40,7 +40,7 @@ type PublicUser = Omit<
 >;
 
 export const getAllUsersService = async (
-  role: "USER" | "MANAGER"
+  role: "USER" | "MANAGER" | "ADMIN"
 ): Promise<PublicUser[]> => {
   try {
     const allUsers = await prisma.user.findMany({
