@@ -25,12 +25,12 @@ const typeDefs = gql`
 
   type Query {
     getReviewsByEntity(entityId: ID!, entityType: String!): [Review!]!
-    getReviewsByUser(userId: ID!): [Review!]!
+    getReviewsByUser(userId: ID!): [Review!]! 
   }
 
   type Mutation {
-    submitReview(reviewData: ReviewCreateInput!): Review!
-    deleteReview(reviewId: ID!): Boolean!
+    submitReview(reviewData: ReviewCreateInput!): Review! @auth @hasRole("USER")
+    deleteReview(reviewId: ID!): Boolean! @auth 
   }
 `;
 

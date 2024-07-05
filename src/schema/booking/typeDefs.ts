@@ -31,16 +31,16 @@ const typeDefs = gql`
   }
 
   type Query {
-    getBookingById(bookingId: ID!): Booking
-    getBookingHistory(userId: String!): [Booking!]!
-    getAllBookings(userId: String!): [Booking!]!
+    getBookingById(bookingId: ID!): Booking @auth
+    getBookingHistory(userId: String!): [Booking!]! @auth
+    getAllBookings(userId: String!): [Booking!]! @auth
   }
 
   type Mutation {
-    createBooking(userId: String!, bookingData: BookingCreateInput!): Booking!
-    updateBookingDetails(bookingId: ID!, bookingData: BookingUpdateInput!): Booking!
-    cancelBooking(bookingId: ID!): Booking!
-    updateBookingStatus(bookingId: ID!, status: BookingStatus!): Booking!
+    createBooking(userId: String!, bookingData: BookingCreateInput!): Booking! @auth
+    updateBookingDetails(bookingId: ID!, bookingData: BookingUpdateInput!): Booking! @auth
+    cancelBooking(bookingId: ID!): Booking! @auth
+    updateBookingStatus(bookingId: ID!, status: BookingStatus!): Booking! @auth
   }
 `;
 

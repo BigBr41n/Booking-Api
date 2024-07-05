@@ -26,8 +26,8 @@ const refreshTokenPublicKey = fs.readFileSync(
 
 
 
-export function signJwt(id: string): string | null {
-  const token = jwt.sign({id}, privateKey, {
+export function signJwt(id: string , role : string): string | null {
+  const token = jwt.sign({id , role}, privateKey, {
     algorithm: "RS256",
     expiresIn: "3h",
   });
@@ -45,9 +45,9 @@ export function verifyJwt(token: string): any {
     (error: VerifyErrors | null, decoded: any | undefined) => {
       if (error) {
         logger.error(error);
-        return { valid: false, expired: true };
+        return null;
       } else {
-        return { valid: true, expired: false, decoded };
+        return decoded;
       }
     }
   );

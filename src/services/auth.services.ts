@@ -232,7 +232,7 @@ export const verifyOTP = async (OTP: string): Promise<Tokens> => {
       throw new ApiError("OTP invalid; please Login Again", 401);
     }
 
-    const accessToken = signJwt(user.id);
+    const accessToken = signJwt(user.id , user.role);
     const refreshToken = signRefreshToken(user.id);
 
     if (!accessToken || !refreshToken) {

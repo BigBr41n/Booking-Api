@@ -29,7 +29,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    getFlightsByDate(date: Date!): [Flight!]!
+    getFlightsByDate(date: Date!): [Flight!]! 
     getFlightsByAirline(airline: String!): [Flight!]!
     getFlightsByDepartureAirport(departureCity: String!): [Flight!]!
     getFlightsByArrivalAirport(arrivalCity: String!): [Flight!]!
@@ -41,9 +41,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addNewFlight(flightData: FlightInput!): Flight!
-    updateFlight(flightId: ID!, flightData: FlightInput!): Flight!
-    cancelFlight(flightId: ID!): Flight!
+    addNewFlight(flightData: FlightInput!): Flight! @auth @hasRole("ADMIN")
+    updateFlight(flightId: ID!, flightData: FlightInput!): Flight! @auth @hasRole("ADMIN")
+    cancelFlight(flightId: ID!): Flight! @auth @hasRole("ADMIN")
   }
 `;
 

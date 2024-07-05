@@ -11,8 +11,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createPaymentIntent(bookingId: ID!): PaymentIntent!
-    confirmPayment(paymentIntentId: String!): PaymentConfirmation!
+    createPaymentIntent(bookingId: ID!): PaymentIntent! @auth 
+    confirmPayment(paymentIntentId: String!): PaymentConfirmation! @auth 
   }
 `;
 
