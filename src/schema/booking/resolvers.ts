@@ -25,9 +25,9 @@ const resolvers = {
         );
       }
     },
-    getBookingHistory: async (_: any, { userId }: { userId: string }) => {
+    getBookingHistory: async (_: any, args : any, context: { user: { id: string; role: string } }) => {
       try {
-        return await getBookingHistory(userId);
+        return await getBookingHistory(context.user.id);
       } catch (error: any) {
         logger.error("Error in getBookingHistory:", error);
         throw new ApolloError(
@@ -36,9 +36,9 @@ const resolvers = {
         );
       }
     },
-    getAllBookings: async (_: any, { userId }: { userId: string }) => {
+    getAllBookings: async (_: any, args : any , context: { user: { id: string; role: string } }) => {
       try {
-        return await getAllBookings(userId);
+        return await getAllBookings(context.user.id);
       } catch (error: any) {
         logger.error("Error in getAllBookings:", error);
         throw new ApolloError(
@@ -50,9 +50,9 @@ const resolvers = {
   },
 
   Mutation: {
-    createBooking: async (_: any, { userId, bookingData }: { userId: string, bookingData: any }) => {
+    createBooking: async (_: any, { bookingData }:{bookingData: any } , context: { user: { id: string; role: string } }) => {
       try {
-        return await createBooking(userId, bookingData);
+        return await createBooking(context.user.id , bookingData);
       } catch (error: any) {
         logger.error("Error in create booking:", error);
         throw new ApolloError(
