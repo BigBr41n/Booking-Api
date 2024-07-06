@@ -8,6 +8,7 @@ import {
   getHotelById,
   getAllHotels
 } from '../../services/hotels.services';
+import * as _ from '../../resources_schema.ts/hotel.schema'
 
 const resolvers = {
   Query: {
@@ -20,6 +21,7 @@ const resolvers = {
     },
     getHotelById: async (_: any, { hotelId }: { hotelId: string }) => {
       try {
+        _.hotelIdSchema(hotelId) 
         return await getHotelById(hotelId);
       } catch (error: any) {
         throw new ApolloError(error.message, error.code);
@@ -37,6 +39,7 @@ const resolvers = {
   Mutation: {
     addNewHotel: async (_: any, { hotelData }: { hotelData: any }) => {
       try {
+        _.hotelDataSchema(hotelData)  ;
         return await addNewHotel(hotelData);
       } catch (error: any) {
         throw new ApolloError(error.message, error.code);
@@ -44,6 +47,7 @@ const resolvers = {
     },
     updateHotelDetails: async (_: any, { hotelId, hotelData }: { hotelId: string, hotelData: any }) => {
       try {
+        _.partialHotelDataSchema.parse(hotelData) ;
         return await updateHotelDetails(hotelId, hotelData);
       } catch (error: any) {
         throw new ApolloError(error.message, error.code);
@@ -58,6 +62,7 @@ const resolvers = {
     },
     updateAvailableRooms: async (_: any, { hotelId, roomsAvailable }: { hotelId: string, roomsAvailable: number }) => {
       try {
+        _.updateAvailableRoomsSchema({ hotelId, roomsAvailable }) ;   ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;  ;
         return await updateAvailableRooms(hotelId, roomsAvailable);
       } catch (error: any) {
         throw new ApolloError(error.message, error.code);

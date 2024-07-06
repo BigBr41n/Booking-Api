@@ -26,16 +26,16 @@ const typeDefs = (0, apollo_server_express_1.gql) `
   }
 
   type Query {
-    getAllUsers(role: Role!): [User!]!
+    getAllUsers(role: Role!): [User!]! @auth @hasRole(role: "ADMIN")
     getUserById(userId: ID!): User
   }
 
   type Mutation {
-    banUser(userId: ID!): Boolean!
-    createNewManager(input: ManagerInput!): User!
-    updateUserInfo(userId: ID!, input: UpdateUserInput!): User!
-    updateUserEmail(userId: ID!, newEmail: String!): User!
-    uploadOrChangeAvatar(userId: ID!, file: Upload!): User!
+    banUser(userId: ID!): Boolean! @auth @hasRole(role: "ADMIN")
+    createNewManager(input: ManagerInput!): User! @auth @hasRole(role: "ADMIN")
+    updateUserInfo(userId: ID!, input: UpdateUserInput!): User! @auth 
+    updateUserEmail(userId: ID!, newEmail: String!): User! @auth @hasRole(role: "ADMIN")
+    uploadOrChangeAvatar(userId: ID!, file: Upload!): User! @auth 
   }
 
   input ManagerInput {

@@ -30,7 +30,7 @@ const typeDefs = (0, apollo_server_express_1.gql) `
   }
 
   type Query {
-    getFlightsByDate(date: Date!): [Flight!]!
+    getFlightsByDate(date: Date!): [Flight!]! 
     getFlightsByAirline(airline: String!): [Flight!]!
     getFlightsByDepartureAirport(departureCity: String!): [Flight!]!
     getFlightsByArrivalAirport(arrivalCity: String!): [Flight!]!
@@ -42,9 +42,9 @@ const typeDefs = (0, apollo_server_express_1.gql) `
   }
 
   type Mutation {
-    addNewFlight(flightData: FlightInput!): Flight!
-    updateFlight(flightId: ID!, flightData: FlightInput!): Flight!
-    cancelFlight(flightId: ID!): Flight!
+    addNewFlight(flightData: FlightInput!): Flight! @auth @hasRole(role: "ADMIN")
+    updateFlight(flightId: ID!, flightData: FlightInput!): Flight! @auth @hasRole(role: "ADMIN")
+    cancelFlight(flightId: ID!): Flight! @auth @hasRole(role: "ADMIN")
   }
 `;
 exports.default = typeDefs;

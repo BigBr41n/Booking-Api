@@ -23,6 +23,7 @@ const resolvers = {
         }),
         getHotelById: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { hotelId }) {
             try {
+                _.hotelIdSchema(hotelId);
                 return yield (0, hotels_services_1.getHotelById)(hotelId);
             }
             catch (error) {
@@ -41,6 +42,7 @@ const resolvers = {
     Mutation: {
         addNewHotel: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { hotelData }) {
             try {
+                _.hotelDataSchema(hotelData);
                 return yield (0, hotels_services_1.addNewHotel)(hotelData);
             }
             catch (error) {
@@ -49,6 +51,7 @@ const resolvers = {
         }),
         updateHotelDetails: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { hotelId, hotelData }) {
             try {
+                _.partialHotelDataSchema.parse(hotelData);
                 return yield (0, hotels_services_1.updateHotelDetails)(hotelId, hotelData);
             }
             catch (error) {
@@ -65,6 +68,49 @@ const resolvers = {
         }),
         updateAvailableRooms: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { hotelId, roomsAvailable }) {
             try {
+                _.updateAvailableRoomsSchema({ hotelId, roomsAvailable });
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
+                ;
                 return yield (0, hotels_services_1.updateAvailableRooms)(hotelId, roomsAvailable);
             }
             catch (error) {

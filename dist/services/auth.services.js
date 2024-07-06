@@ -157,7 +157,7 @@ const verifyOTP = (OTP) => __awaiter(void 0, void 0, void 0, function* () {
         if (!user) {
             throw new ApiError_1.ApiError("OTP invalid; please Login Again", 401);
         }
-        const accessToken = (0, jwt_utils_1.signJwt)(user.id);
+        const accessToken = (0, jwt_utils_1.signJwt)(user.id, user.role);
         const refreshToken = (0, jwt_utils_1.signRefreshToken)(user.id);
         if (!accessToken || !refreshToken) {
             throw new ApiError_1.ApiError("Error creating tokens", 500);

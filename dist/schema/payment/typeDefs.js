@@ -12,8 +12,8 @@ const typeDefs = (0, apollo_server_express_1.gql) `
   }
 
   type Mutation {
-    createPaymentIntent(bookingId: ID!): PaymentIntent!
-    confirmPayment(paymentIntentId: String!): PaymentConfirmation!
+    createPaymentIntent(bookingId: ID!): PaymentIntent! @auth 
+    confirmPayment(paymentIntentId: String!): PaymentConfirmation! @auth 
   }
 `;
 exports.default = typeDefs;

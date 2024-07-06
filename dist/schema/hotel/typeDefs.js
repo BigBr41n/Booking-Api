@@ -46,10 +46,10 @@ const typeDefs = (0, apollo_server_express_1.gql) `
   }
 
   type Mutation {
-    addNewHotel(hotelData: HotelCreateInput!): Hotel!
-    updateHotelDetails(hotelId: ID!, hotelData: HotelUpdateInput!): Hotel!
-    removeHotel(hotelId: ID!): Hotel!
-    updateAvailableRooms(hotelId: ID!, roomsAvailable: Int!): Hotel!
+    addNewHotel(hotelData: HotelCreateInput!): Hotel! @auth @hasRole(role: "ADMIN")
+    updateHotelDetails(hotelId: ID!, hotelData: HotelUpdateInput!): Hotel! @auth @hasRole(role: "ADMIN")
+    removeHotel(hotelId: ID!): Hotel! @auth @hasRole(role: "ADMIN")
+    updateAvailableRooms(hotelId: ID!, roomsAvailable: Int!): Hotel! @auth @hasRole(role: "ADMIN")
   }
 `;
 exports.default = typeDefs;

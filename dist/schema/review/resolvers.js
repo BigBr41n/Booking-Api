@@ -15,6 +15,8 @@ const resolvers = {
     Query: {
         getReviewsByEntity: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { entityId, entityType }) {
             try {
+                _.entityIdSchema.parse(entityId);
+                _.entityTypeSchema.parse(entityType);
                 return yield (0, reviews_services_1.getReviewsByEntity)(entityId, entityType);
             }
             catch (error) {
@@ -33,6 +35,7 @@ const resolvers = {
     Mutation: {
         submitReview: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { reviewData }) {
             try {
+                _.reviewDataSchema.parse(reviewData);
                 return yield (0, reviews_services_1.submitReview)(reviewData);
             }
             catch (error) {

@@ -15,8 +15,8 @@ const privateKey = fs_1.default.readFileSync(path_1.default.join(__dirname, "../
 const publicKey = fs_1.default.readFileSync(path_1.default.join(__dirname, "../..", "public.key"), "utf8");
 const refreshTokenPrivateKey = fs_1.default.readFileSync(path_1.default.join(__dirname, "../..", "refTokenPrivate.key"), "utf-8");
 const refreshTokenPublicKey = fs_1.default.readFileSync(path_1.default.join(__dirname, "../..", "refTokenPublic.key"), "utf-8");
-function signJwt(id) {
-    const token = jsonwebtoken_1.default.sign({ id }, privateKey, {
+function signJwt(id, role) {
+    const token = jsonwebtoken_1.default.sign({ id, role }, privateKey, {
         algorithm: "RS256",
         expiresIn: "3h",
     });
@@ -26,10 +26,10 @@ function verifyJwt(token) {
     jsonwebtoken_1.default.verify(token, publicKey, { algorithms: ["RS256"] }, (error, decoded) => {
         if (error) {
             logger_1.default.error(error);
-            return { valid: false, expired: true };
+            return null;
         }
         else {
-            return { valid: true, expired: false, decoded };
+            return decoded;
         }
     });
 }

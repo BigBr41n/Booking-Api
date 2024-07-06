@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -17,6 +40,7 @@ exports.getAllFlightsService = exports.getFlightByIdService = exports.getFlightB
 const client_1 = require("@prisma/client");
 const logger_1 = __importDefault(require("../utils/logger"));
 const ApiError_1 = require("../utils/ApiError");
+const flight = __importStar(require("../resources_schema.ts/flights.schema"));
 const prisma = new client_1.PrismaClient();
 //////////////////////*************** ONLY FOR ADMIN **************////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +52,7 @@ const prisma = new client_1.PrismaClient();
  */
 const addNewFlight = (flightData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.flightDataSchema.parse(flightData);
         return yield prisma.flight.create({
             data: flightData,
         });
@@ -50,6 +75,7 @@ exports.addNewFlight = addNewFlight;
  */
 const updateFlight = (flightId, flightData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.partialFlightDataSchema.parse(flightData);
         return yield prisma.flight.update({
             where: { id: flightId },
             data: flightData,
@@ -96,6 +122,7 @@ exports.cancelFlight = cancelFlight;
  */
 const getFlightsByDate = (date) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.dateSchema.parse(date);
         return yield prisma.flight.findMany({
             where: { departureDate: date },
         });
@@ -117,6 +144,7 @@ exports.getFlightsByDate = getFlightsByDate;
  */
 const getFlightsByAirline = (airline) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.airlineSchema.parse(airline);
         return yield prisma.flight.findMany({
             where: { airline },
         });
@@ -138,6 +166,7 @@ exports.getFlightsByAirline = getFlightsByAirline;
  */
 const getFlightsByDepartureAirport = (departureCity) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.departureCitySchema.parse(departureCity);
         return yield prisma.flight.findMany({
             where: { departureCity },
         });
@@ -159,6 +188,7 @@ exports.getFlightsByDepartureAirport = getFlightsByDepartureAirport;
  */
 const getFlightsByArrivalAirport = (arrivalCity) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.arrivalCitySchema.parse(arrivalCity);
         return yield prisma.flight.findMany({
             where: { arrivalCity },
         });
@@ -181,6 +211,7 @@ exports.getFlightsByArrivalAirport = getFlightsByArrivalAirport;
  */
 const getFlightsByPriceRange = (minPrice, maxPrice) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.priceRangeSchema.parse({ minPrice, maxPrice });
         return yield prisma.flight.findMany({
             where: {
                 price: {
@@ -207,6 +238,7 @@ exports.getFlightsByPriceRange = getFlightsByPriceRange;
  */
 const getFlightsByStatus = (status) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.statusSchema.parse(status);
         return yield prisma.flight.findMany({
             where: { status },
         });
@@ -228,6 +260,7 @@ exports.getFlightsByStatus = getFlightsByStatus;
  */
 const getFlightBySeatType = (seatType) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        flight.seatTypeSchema.parse(seatType);
         return yield prisma.flight.findMany({
             where: {
                 bookings: {

@@ -26,18 +26,18 @@ const resolvers = {
                 throw new apollo_server_express_1.ApolloError(error.message, error.statusCode || "INTERNAL_SERVER_ERROR");
             }
         }),
-        getBookingHistory: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { userId }) {
+        getBookingHistory: (_, args, context) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                return yield (0, booking_services_1.getBookingHistory)(userId);
+                return yield (0, booking_services_1.getBookingHistory)(context.user.id);
             }
             catch (error) {
                 logger_1.default.error("Error in getBookingHistory:", error);
                 throw new apollo_server_express_1.ApolloError(error.message, error.statusCode || "INTERNAL_SERVER_ERROR");
             }
         }),
-        getAllBookings: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { userId }) {
+        getAllBookings: (_, args, context) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                return yield (0, booking_services_1.getAllBookings)(userId);
+                return yield (0, booking_services_1.getAllBookings)(context.user.id);
             }
             catch (error) {
                 logger_1.default.error("Error in getAllBookings:", error);
@@ -46,9 +46,9 @@ const resolvers = {
         }),
     },
     Mutation: {
-        createBooking: (_1, _a) => __awaiter(void 0, [_1, _a], void 0, function* (_, { userId, bookingData }) {
+        createBooking: (_1, _a, context_1) => __awaiter(void 0, [_1, _a, context_1], void 0, function* (_, { bookingData }, context) {
             try {
-                return yield (0, booking_services_1.createBooking)(userId, bookingData);
+                return yield (0, booking_services_1.createBooking)(context.user.id, bookingData);
             }
             catch (error) {
                 logger_1.default.error("Error in create booking:", error);
