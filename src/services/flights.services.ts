@@ -2,6 +2,7 @@
 import { PrismaClient, Flight } from '@prisma/client';
 import logger from '../utils/logger';
 import { ApiError } from '../utils/ApiError';
+import * as flight from '../resources_schema.ts/flights.schema'
 
 const prisma = new PrismaClient();
 
@@ -19,6 +20,7 @@ export interface FlightData {
 
 
 
+
 //////////////////////*************** ONLY FOR ADMIN **************////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +32,7 @@ export interface FlightData {
  */
 export const addNewFlight = async (flightData: FlightData): Promise<Flight> => {
   try {
+    flight.flightDataSchema.parse(flightData);
     return await prisma.flight.create({
       data: flightData,
     });
@@ -57,6 +60,7 @@ export const addNewFlight = async (flightData: FlightData): Promise<Flight> => {
  */
 export const updateFlight = async (flightId: string, flightData: Partial<FlightData>): Promise<Flight> => {
   try {
+    flight.partialFlightDataSchema.parse(flightData)
     return await prisma.flight.update({
       where: { id: flightId },
       data: flightData,
@@ -114,6 +118,8 @@ export const cancelFlight = async (flightId: string): Promise<Flight> => {
  */
 export const getFlightsByDate = async (date: Date): Promise<Flight[]> => {
   try {
+    flight.dateSchema.parse(date);  
+
     return await prisma.flight.findMany({
       where: { departureDate: date },
     });
@@ -141,6 +147,8 @@ export const getFlightsByDate = async (date: Date): Promise<Flight[]> => {
  */
 export const getFlightsByAirline = async (airline: string): Promise<Flight[]> => {
   try {
+    flight.airlineSchema.parse(airline);
+
     return await prisma.flight.findMany({
       where: { airline },
     });
@@ -170,6 +178,8 @@ export const getFlightsByAirline = async (airline: string): Promise<Flight[]> =>
  */
 export const getFlightsByDepartureAirport = async (departureCity: string): Promise<Flight[]> => {
   try {
+    flight.departureCitySchema.parse(departureCity);
+
     return await prisma.flight.findMany({
       where: { departureCity },
     });
@@ -199,6 +209,8 @@ export const getFlightsByDepartureAirport = async (departureCity: string): Promi
  */
 export const getFlightsByArrivalAirport = async (arrivalCity: string): Promise<Flight[]> => {
   try {
+    flight.arrivalCitySchema.parse(arrivalCity);
+
     return await prisma.flight.findMany({
       where: { arrivalCity },
     });
@@ -229,6 +241,8 @@ export const getFlightsByArrivalAirport = async (arrivalCity: string): Promise<F
  */
 export const getFlightsByPriceRange = async (minPrice: number, maxPrice: number): Promise<Flight[]> => {
   try {
+    flight.priceRangeSchema.parse({ minPrice, maxPrice });
+
     return await prisma.flight.findMany({
       where: {
         price: {
@@ -263,6 +277,8 @@ export const getFlightsByPriceRange = async (minPrice: number, maxPrice: number)
  */
 export const getFlightsByStatus = async (status: string): Promise<Flight[]> => {
   try {
+    flight.statusSchema.parse(status);
+
     return await prisma.flight.findMany({
       where: { status },
     });
@@ -290,6 +306,8 @@ export const getFlightsByStatus = async (status: string): Promise<Flight[]> => {
  */
 export const getFlightBySeatType = async (seatType: string): Promise<Flight[]> => {
   try {
+    flight.seatTypeSchema.parse(seatType);
+
     return await prisma.flight.findMany({
       where: {
         bookings: {
@@ -325,6 +343,7 @@ export const getFlightBySeatType = async (seatType: string): Promise<Flight[]> =
  */
 export const getFlightByIdService = async (flightId: string): Promise<Flight | null> => {
   try {
+
     const flight = await prisma.flight.findUnique({
       where: { id: flightId },
     });
