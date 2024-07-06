@@ -11,6 +11,7 @@ import {
   uploadOrChangeAvatarService,
 } from '../../services/users.services';
 import { ApolloError } from 'apollo-server-express';
+import * as user from '../../resources_schema.ts/user.schema'
 
 
 
@@ -21,13 +22,18 @@ const resolvers = {
     getAllUsers: async (
       _: any,
       { role }: { role: 'USER' | 'MANAGER' | 'ADMIN' }
-    ): Promise<Partial<User>[]> => await getAllUsersService(role),
-
+    ): Promise<Partial<User>[]> => {
+      user.getAllUserSchema.parse({role}); 
+      return await getAllUsersService(role); 
+    },
     getUserById: async (
       _: any,
       args : any , 
       context: { user: { id: string; role: string } }
-    ): Promise<Partial<User> | null> => await getUserByIdService(context.user.id),
+    ): Promise<Partial<User> | null> => {
+      user.getUserByIdSchema.parse({userId : context.user.id});
+      return await getUserByIdService(context.user.id)
+    }
   },
 
   Mutation: {
@@ -36,6 +42,7 @@ const resolvers = {
       { userId }: { userId: string }
     ): Promise<boolean> => {
       try {
+        user.banUserSchema.parse({userId});
         await banUserService(userId);
         return true;
       } catch (error: any) {
@@ -52,7 +59,7 @@ const resolvers = {
       { input }: { input: any }
     ): Promise<User> => {
       try {
-
+        user.createManagerSchema.parse(input);
         return await createNewManager(input); 
 
       } catch (error : any) {
@@ -73,8 +80,10 @@ const resolvers = {
     updateUserEmail: async (
       _: any,
       { userId, newEmail }: { userId: string; newEmail: string }
-    ): Promise<User> => await updateUserEmailService(userId, newEmail),
-
+    ): Promise<User> => {
+      user.updateUserEmailSchema.parse({ userId, newEmail});
+      return await updateUserEmailService(userId, newEmail)
+    },
     uploadOrChangeAvatar: async (
       _: any,
       { file }: { file: Promise<GraphQLUpload> }, 
