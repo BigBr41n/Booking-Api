@@ -29,7 +29,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    submitReview(reviewData: ReviewCreateInput!): Review! @auth @hasRole("USER")
+    submitReview(reviewData: ReviewCreateInput!): Review! @auth 
     deleteReview(reviewId: ID!): Boolean! @auth 
   }
 `;

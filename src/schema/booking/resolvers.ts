@@ -9,12 +9,12 @@ import {
   getAllBookings
 } from '../../services/booking.services';
 import logger from '../../utils/logger'
-import { BookingStatus } from '@prisma/client';
+import { Booking, BookingStatus } from '@prisma/client';
 
 
 const resolvers = {
   Query: {
-    getBookingById: async (_: any, { bookingId }: { bookingId: string }) => {
+    getBookingById: async (_: any, { bookingId }: { bookingId: string }): Promise<Booking | null> => {
       try {
         return await getBookingById(bookingId);
       } catch (error: any) {
@@ -25,7 +25,7 @@ const resolvers = {
         );
       }
     },
-    getBookingHistory: async (_: any, args : any, context: { user: { id: string; role: string } }) => {
+    getBookingHistory: async (_: any, args : any, context: { user: { id: string; role: string } }) : Promise<Booking[]> => {
       try {
         return await getBookingHistory(context.user.id);
       } catch (error: any) {
@@ -36,7 +36,7 @@ const resolvers = {
         );
       }
     },
-    getAllBookings: async (_: any, args : any , context: { user: { id: string; role: string } }) => {
+    getAllBookings: async (_: any, args : any , context: { user: { id: string; role: string } }) : Promise<Booking[]> => {
       try {
         return await getAllBookings(context.user.id);
       } catch (error: any) {
@@ -50,7 +50,7 @@ const resolvers = {
   },
 
   Mutation: {
-    createBooking: async (_: any, { bookingData }:{bookingData: any } , context: { user: { id: string; role: string } }) => {
+    createBooking: async (_: any, { bookingData }:{bookingData: any } , context: { user: { id: string; role: string } }): Promise<Booking> => {
       try {
         return await createBooking(context.user.id , bookingData);
       } catch (error: any) {
@@ -61,7 +61,7 @@ const resolvers = {
         );
       }
     },
-    updateBookingDetails: async (_: any, { bookingId, bookingData }: { bookingId: string, bookingData: any }) => {
+    updateBookingDetails: async (_: any, { bookingId, bookingData }: { bookingId: string, bookingData: any }): Promise<Booking> => {
       try {
         return await updateBookingDetails(bookingId, bookingData);
       } catch (error: any) {
@@ -72,7 +72,7 @@ const resolvers = {
         );
       }
     },
-    cancelBooking: async (_: any, { bookingId }: { bookingId: string }) => {
+    cancelBooking: async (_: any, { bookingId }: { bookingId: string }) : Promise<Booking> => {
       try {
         return await cancelBooking(bookingId);
       } catch (error: any) {
@@ -83,7 +83,7 @@ const resolvers = {
         );
       }
     },
-    updateBookingStatus: async (_: any, { bookingId, status }: { bookingId: string, status: BookingStatus }) => {
+    updateBookingStatus: async (_: any, { bookingId, status }: { bookingId: string, status: BookingStatus }):Promise<Booking> => {
       try {
         return await updateBookingStatus(bookingId, status);
       } catch (error: any) {

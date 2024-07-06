@@ -13,11 +13,11 @@ app.use(helmet());
 app.use(express.json());
 app.use(cors());
 
-const server = new ApolloServer({
+export const apolloServer = new ApolloServer({
     schema,
     context: ({ req }) => {
       const token = req?.headers?.authorization?.split(" ")[1] ;
-      if(!token) return;
+      if(!token) return null;
 
       // Try to retrieve a user with the token
       const user = verifyJwt(token);

@@ -45,10 +45,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addNewHotel(hotelData: HotelCreateInput!): Hotel! @auth @hasRole("ADMIN")
-    updateHotelDetails(hotelId: ID!, hotelData: HotelUpdateInput!): Hotel! @auth @hasRole("ADMIN")
-    removeHotel(hotelId: ID!): Hotel! @auth @hasRole("ADMIN")
-    updateAvailableRooms(hotelId: ID!, roomsAvailable: Int!): Hotel! @auth @hasRole("ADMIN")
+    addNewHotel(hotelData: HotelCreateInput!): Hotel! @auth @hasRole(role: "ADMIN")
+    updateHotelDetails(hotelId: ID!, hotelData: HotelUpdateInput!): Hotel! @auth @hasRole(role: "ADMIN")
+    removeHotel(hotelId: ID!): Hotel! @auth @hasRole(role: "ADMIN")
+    updateAvailableRooms(hotelId: ID!, roomsAvailable: Int!): Hotel! @auth @hasRole(role: "ADMIN")
   }
 `;
 

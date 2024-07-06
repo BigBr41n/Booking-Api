@@ -41,9 +41,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addNewFlight(flightData: FlightInput!): Flight! @auth @hasRole("ADMIN")
-    updateFlight(flightId: ID!, flightData: FlightInput!): Flight! @auth @hasRole("ADMIN")
-    cancelFlight(flightId: ID!): Flight! @auth @hasRole("ADMIN")
+    addNewFlight(flightData: FlightInput!): Flight! @auth @hasRole(role: "ADMIN")
+    updateFlight(flightId: ID!, flightData: FlightInput!): Flight! @auth @hasRole(role: "ADMIN")
+    cancelFlight(flightId: ID!): Flight! @auth @hasRole(role: "ADMIN")
   }
 `;
 

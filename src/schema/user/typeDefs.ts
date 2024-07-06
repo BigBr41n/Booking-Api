@@ -25,15 +25,15 @@ const typeDefs = gql`
   }
 
   type Query {
-    getAllUsers(role: Role!): [User!]! @auth @hasRole("ADMIN")
+    getAllUsers(role: Role!): [User!]! @auth @hasRole(role: "ADMIN")
     getUserById(userId: ID!): User
   }
 
   type Mutation {
-    banUser(userId: ID!): Boolean! @auth @hasRole("ADMIN")
-    createNewManager(input: ManagerInput!): User! @auth @hasRole("ADMIN")
+    banUser(userId: ID!): Boolean! @auth @hasRole(role: "ADMIN")
+    createNewManager(input: ManagerInput!): User! @auth @hasRole(role: "ADMIN")
     updateUserInfo(userId: ID!, input: UpdateUserInput!): User! @auth 
-    updateUserEmail(userId: ID!, newEmail: String!): User! @auth @hasRole("ADMIN")
+    updateUserEmail(userId: ID!, newEmail: String!): User! @auth @hasRole(role: "ADMIN")
     uploadOrChangeAvatar(userId: ID!, file: Upload!): User! @auth 
   }
 

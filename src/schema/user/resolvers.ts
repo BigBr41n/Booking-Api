@@ -1,4 +1,3 @@
-//import { GraphQLUpload } from 'graphql-upload';
 import { GraphQLUpload } from 'graphql-upload-minimal'
 import { User } from '@prisma/client';
 import logger from '../../utils/logger'

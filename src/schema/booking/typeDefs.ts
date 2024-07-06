@@ -40,7 +40,7 @@ const typeDefs = gql`
     createBooking(userId: String!, bookingData: BookingCreateInput!): Booking! @auth
     updateBookingDetails(bookingId: ID!, bookingData: BookingUpdateInput!): Booking! @auth
     cancelBooking(bookingId: ID!): Booking! @auth
-    updateBookingStatus(bookingId: ID!, status: BookingStatus!): Booking! @auth
+    updateBookingStatus(bookingId: ID!, status: BookingStatus!): Booking! @auth @hasRole(role: "ADMIN")
   }
 `;
 
