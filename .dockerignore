@@ -1,0 +1,15 @@
+node_modules
+
+.vscode
+.idea
+
+
+.git
+.gitignore
+
+Dockerfile
+.dockerignore
+
+docker-compose.yml
+
+README.md
