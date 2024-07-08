@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-GQL
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-GQL-data:/var/lib/mysql
+    networks:
+      - GQL-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: booking-app-GQL
+    restart: always
+    env_file: .env
+    ports:
+      - "8080:8080"
+    networks:
+      - GQL-network
+    depends_on:
+      - db
+
+networks:
+  GQL-network:
+    driver: bridge
+
+volumes:
+  db-GQL-data:
